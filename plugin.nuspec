@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>com.castsoftware.uc.restapi.excelreport</id>
+    <version>1.4.5</version>
+    <title>Rest AIP Excel reports</title>
+    <authors>User Community</authors>
+    <owners>CAST</owners>
+    <projectUrl>https://github.com/CAST-Extend/com.castsoftware.uc.restapi.excelreport/wiki</projectUrl>
+    <iconUrl>https://github.com/CAST-Extend/com.castsoftware.uc.restapi.excelreport/blob/master/Excel_2010_23622.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This extension provides a set of Excel reports on quality rules and metrics extracted from the AIP Rest API</description>
+    <releaseNotes>https://github.com/CAST-Extend/com.castsoftware.uc.restapi.excelreport/wiki</releaseNotes>
+    <tags>CASTUserCommunity Quality</tags>
+    <dependencies>
+      <dependency id="CAIP" version="8.2" />
+    </dependencies>
+  </metadata>
+</package>
