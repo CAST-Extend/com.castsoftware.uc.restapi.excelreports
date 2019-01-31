@@ -4,6 +4,10 @@ public class CentralSnapshotMetrics {
 	private String applicationName = null;
 	private Integer applicationId = -1;
 	private Integer snapshotId = -1;
+	private Long snapshotTime = -1l;
+	private String snapshotVersion = null;
+	private String isoDate = null;
+
 	private Integer addedArtifacts = -1;
 	private Integer modifiedArtifacts = -1;
 	private Integer deletedArtifacts = -1;
@@ -51,7 +55,24 @@ public class CentralSnapshotMetrics {
 	public void setApplicationId(Integer applicationId) {
 		this.applicationId = applicationId;
 	}
+	public Long getSnapshotTime() {
+		return snapshotTime;
+	}
+	public void setSnapshotTime(Long snapshotTime) {
+		this.snapshotTime = snapshotTime;
+	}
+	public String getSnapshotVersion() {
+		return snapshotVersion;
+	}
+	public void setSnapshotVersion(String snapshotVersion) {
+		this.snapshotVersion = snapshotVersion;
+	}
 	
-	
+	public String getIsoDate() {
+		return isoDate;
+	}
+	public void setIsoDate(String isoDate) {
+		this.isoDate = isoDate;
+	}
 	
 }

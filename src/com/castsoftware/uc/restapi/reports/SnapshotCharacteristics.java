@@ -90,7 +90,12 @@ public class SnapshotCharacteristics {
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append(version).append("#").append(isoDate).append("#").append(href);
+		// Rest API 
+		if (version != null && isoDate != null && href != null) 
+			sb.append(version).append("#").append(isoDate).append("#").append(href);
+		// Central schema
+		else 
+			sb.append(applicationName).append("#").append(isoDate).append("#").append(time).append("#").append(id).append("#").append(version);
 		return sb.toString();
 	}
 	

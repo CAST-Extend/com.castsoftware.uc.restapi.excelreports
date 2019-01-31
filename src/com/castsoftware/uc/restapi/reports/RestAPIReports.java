@@ -49,7 +49,7 @@ public class RestAPIReports {
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// Please also change the version in version.properties file
-	private static final String VERSION = "1.4.5";
+	private static final String VERSION = "1.4.6";
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -96,7 +96,7 @@ public class RestAPIReports {
 	private final static String OPTION_SK_ENV = "env";
 	private final static String OPTION_SK_RTYPE = "rt";
 	private final static String OPTION_SK_APPFILTER = "pra";
-	private final static String OPTION_SK_VERSIONFILTER = "pra";
+	private final static String OPTION_SK_VERSIONFILTER = "fv";
 	// DB
 	private final static String OPTION_SK_DB_RUNSQL = "dbr";
 	private final static String OPTION_SK_DB_HOST = "dbh";
@@ -106,6 +106,8 @@ public class RestAPIReports {
 	private final static String OPTION_SK_DB_USER = "dbu";
 	private final static String OPTION_SK_DB_PWD = "dbpw";
 
+	private final static String OPTION_SK_RUNACTIONPLAN = "rap";
+	
 	// Lonk key params
 	private final static String OPTION_LK_URL = "url";
 	private final static String OPTION_LK_HDOMAIN = "healthDomain";
@@ -125,13 +127,15 @@ public class RestAPIReports {
 	private final static String OPTION_LK_DB_USER = "dbUser";
 	private final static String OPTION_LK_DB_PWD = "dbPassword";
 
+	private final static String OPTION_LK_RUNACTIONPLAN = "runActionPlan";
+	
 	/**
 	 * Specific for Telefonica customer Hardcoded list of application with NO
 	 * FP, separated by a comma Used to set a N/A value for FP metrics because
 	 * we have used a FP licence key and want to hide those metrics
 	 */
 	private static final String[] TELEFONICASPECIFIC_APPLICATIONS_WITH_NOFP = new String[] {
-			"U-057 - Unified-FSS-Billing" };
+			"U-057 - Unified-FSS-Billing", "U-101 - Cactus" };
 	/*
 	 * CAST Demo parameters
 	 * 
@@ -215,8 +219,7 @@ public class RestAPIReports {
 	/**
 	 * Retrieve or not the action plan items
 	 */
-	// TODO : param to be externalized
-	private boolean bRetrieveActionPlanItems = false;
+	private boolean bRetrieveActionPlanItems = true;
 
 	/**
 	 * Retrieve or not the central schemas metrics
@@ -514,7 +517,7 @@ public class RestAPIReports {
 				// Filter mecanism based on application name (optional input
 				// parameter)
 				if (!applicationtoBeProcessed(applicationName)) {
-					continue;
+					continue; 
 				}
 				app.setName(applicationName);
 				String applicationHRef = object.getString("href");
@@ -907,6 +910,7 @@ public class RestAPIReports {
 				output.setSnapshotId(snapshot.getId());
 				output.setSnapshotTime(snapshot.getTime());
 				output.setDomain(snapshot.getDomain());
+				output.setIsoDate(snapshot.getIsoDate());
 				localListReportOuputs.add(output);
 			} catch (Exception l_exception) {
 				logger.error(l_exception.getMessage(), l_exception);
@@ -1337,6 +1341,8 @@ public class RestAPIReports {
 					Long time = object.getJSONObject("date").getLong("time");
 					int number = object.getInt("number");
 					MetricReportOutput output = getSnapshotOutput(applicationSnapshotHref);
+					if (output == null)
+						continue;
 
 					logger.debug("applicationSnapshotHref=" + applicationSnapshotHref);
 
@@ -1422,7 +1428,8 @@ public class RestAPIReports {
 					JSONObject object = array.getJSONObject(i);
 					String applicationSnapshotHref = object.getJSONObject("applicationSnapshot").getString("href");
 					MetricReportOutput output = getSnapshotOutput(applicationSnapshotHref);
-
+					if (output == null)
+						continue;
 					logger.debug("applicationSnapshotHref=" + applicationSnapshotHref);
 
 					JSONArray appResultsArray = object.getJSONArray("applicationResults");
@@ -1500,17 +1507,21 @@ public class RestAPIReports {
 			List<CentralSnapshotMetrics> listCentralSnapshotMetrics = CSSDbTripletQueryUtil
 					.runAddedDeletedModifiedArtifactQueries(getCssDbHostname(), getCssDbPort(), getCssDbDatabase(),
 							getCssDbUser(), getCssDbPassword(), listCentralSchemas[i], logger);
-			if (listCentralSnapshotMetrics != null)
+			if (listCentralSnapshotMetrics != null) {
 				for (CentralSnapshotMetrics centralSnapshotMetrics : listCentralSnapshotMetrics) {
-					MetricReportOutput output = getSnapshotOutput(centralSnapshotMetrics.getApplicationName(),
-							centralSnapshotMetrics.getSnapshotId());
+					logger.debug(" looking for central snapshot " + centralSnapshotMetrics.getSnapshotVersion() +"/"+ centralSnapshotMetrics.getIsoDate());					
+					MetricReportOutput output = getSnapshotOutputByIsoDate(centralSnapshotMetrics.getApplicationName(),
+							centralSnapshotMetrics.getIsoDate());
+					logger.debug(" AddedArtifacts =" + centralSnapshotMetrics.getAddedArtifacts());					
 					if (output != null) {
+						logger.debug(" output != null ");					
 						output.setNbArtifactsAdded(centralSnapshotMetrics.getAddedArtifacts());
 						output.setNbArtifactsModified(centralSnapshotMetrics.getModifiedArtifacts());
 						output.setNbArtifactsDeleted(centralSnapshotMetrics.getDeletedArtifacts());
 						output.setLocCentral(centralSnapshotMetrics.getLoc());
 					}
 				}
+			}
 
 		}
 	}
@@ -1534,6 +1545,8 @@ public class RestAPIReports {
 					JSONObject object = array.getJSONObject(i);
 					String applicationSnapshotHref = object.getJSONObject("applicationSnapshot").getString("href");
 					MetricReportOutput output = getSnapshotOutput(applicationSnapshotHref);
+					if (output == null)
+						continue;
 					logger.debug("applicationSnapshotHref=" + applicationSnapshotHref);
 					JSONArray appResultsArray = object.getJSONArray("applicationResults");
 
@@ -1587,6 +1600,8 @@ public class RestAPIReports {
 
 					JSONArray appResultsArray = object.getJSONArray("applicationResults");
 					MetricReportOutput output = getSnapshotOutput(applicationSnapshotHref);
+					if (output == null)
+						continue;
 					for (int j = 0; j < appResultsArray.length(); j++) {
 						JSONObject jsonObjectResult = appResultsArray.getJSONObject(j);
 						/*
@@ -1760,6 +1775,8 @@ public class RestAPIReports {
 		logger.info("Report type:" + getReportType());
 		logger.info("Version filter:" + this.filterVersions);
 		logger.info("Application filter:" + this.filterApplicationNames);
+		logger.info("Retrieve DB central metrics using SQL :" + this.bRetrieveDBCentralSchemaMetrics);
+		logger.info("Run action plan summary :" + this.bRetrieveActionPlanItems);
 		logger.info("==============================");
 	}
 
@@ -1845,8 +1862,20 @@ public class RestAPIReports {
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private MetricReportOutput getSnapshotOutput(String applicationName, Long time) {
+	private MetricReportOutput getSnapshotOutputByIsoDate(String applicationName, String isoDate) {
+		logger.debug("date to find=" + isoDate);
 		for (MetricReportOutput output : listMetricsReportOutputs) {
+			logger.debug("snap =" + output.getIsoDate() + "/" + output.getSnapshotVersion());
+			if (output.getApplicationName().equals(applicationName) && output.getIsoDate().equals(isoDate))
+				return output;
+		}
+		return null;
+	}
+	
+	private MetricReportOutput getSnapshotOutput(String applicationName, Long time) {
+		logger.debug("time to find=" + time);
+		for (MetricReportOutput output : listMetricsReportOutputs) {
+			logger.debug("snap =" + output.getSnapshotTime() + "/" + output.getSnapshotVersion());
 			if (output.getApplicationName().equals(applicationName) && output.getSnapshotTime().equals(time))
 				return output;
 		}
@@ -2673,6 +2702,7 @@ public class RestAPIReports {
 		options.addOption(OPTION_SK_DB_SCHEMAS, OPTION_LK_DB_SCHEMAS, true, "DB schemas list");
 		options.addOption(OPTION_SK_DB_USER, OPTION_LK_DB_USER, true, "DB user");
 		options.addOption(OPTION_SK_DB_PWD, OPTION_LK_DB_PWD, true, "DB password");
+		options.addOption(OPTION_LK_RUNACTIONPLAN, OPTION_LK_RUNACTIONPLAN, true, "Run action plan summary ? (true / false)");
 
 		return options;
 	}
@@ -2719,6 +2749,10 @@ public class RestAPIReports {
 			if (cmd.hasOption(OPTION_LK_VERSIONFILTER)) {
 				this.filterVersions = cmd.getOptionValue(OPTION_LK_VERSIONFILTER);
 			}
+			if (cmd.hasOption(OPTION_LK_RUNACTIONPLAN)) {
+				this.bRetrieveActionPlanItems = !"false".equals(cmd.getOptionValue(OPTION_LK_RUNACTIONPLAN));
+			}
+						
 
 		} catch (org.apache.commons.cli.ParseException e) {
 			logger.error("Error parsing command line : " + e.getMessage());

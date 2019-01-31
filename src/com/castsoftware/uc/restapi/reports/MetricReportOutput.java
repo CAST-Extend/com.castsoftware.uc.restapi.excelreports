@@ -24,6 +24,7 @@ public class MetricReportOutput {
 	private String snapshotVersion;
 	private String snapshotId;
 	private Long snapshotTime;
+	private String isoDate;
 	private String domain;
 
 	////////////////////////////////////////////////////////////////////////////////////
@@ -1425,6 +1426,16 @@ public class MetricReportOutput {
 
 	public void setNbABAPTransactions(Integer nbABAPTransactions) {
 		this.nbABAPTransactions = nbABAPTransactions;
+	}
+
+
+	public String getIsoDate() {
+		return isoDate;
+	}
+
+
+	public void setIsoDate(String isoDate) {
+		this.isoDate = isoDate;
 	}
 
 
