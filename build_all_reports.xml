@@ -14,7 +14,7 @@
 	
 	<!-- Local eclipse project directory -->  
 	<!-- on MMR workstation -->
-	<property name="project.dir" value="C:/Users/mmr/workspace/com.castsoftware.uc.restapi.excelreports"/>
+	<property name="project.dir" value="C:\Users\mmr\git\com.castsoftware.uc.restapi.excelreports"/>
 	<!-- on TelefonicaPortal VM -->
 	<!-- property name="project.dir" value="E:/Drives/I/eclipse-workspace/com.castsoftware.uc.restapi.excelreports"/ -->
 	
@@ -48,12 +48,10 @@
         	<zipfileset dir="${project.dir}\lib" includes="postgresql-8.3-603.jdbc3.jar"/>	
         	<zipfileset dir="${project.dir}\lib" includes="commons-cli-1.2.jar"/>
         </jar>
-        <copy file="./resources/start_metrics_fullreport_DEMO.template.bat" tofile="${output.dir}/${version}/RestAPIReports_AllReports/start_metrics_fullreport.bat" />
-        <copy file="./resources/start_metrics_kpireport_DEMO.template.bat" tofile="${output.dir}/${version}/RestAPIReports_AllReports/start_metrics_kpireport.bat" />
-        <copy file="./resources/start_qr_simplereport_DEMO.template.bat" tofile="${output.dir}/${version}/RestAPIReports_AllReports/start_qr_simplereport.bat" />
-        <copy file="./resources/start_qr_fullreport_DEMO.template.bat" tofile="${output.dir}/${version}/RestAPIReports_AllReports/start_qr_fullreport.bat" />
+		<copy todir="${output.dir}/${version}/RestAPIReports_AllReports">
+	        	<fileset dir="./resources/DEMO"/>
+	    </copy>	
         <copy file="./version.properties" tofile="${output.dir}/${version}/RestAPIReports_AllReports/version.properties" />
-
 		
 		<zip destfile="${output.dir}/${version}/RestAPIReports_AllReports-${version}.zip">
 				<fileset dir="${output.dir}/${version}" />
@@ -62,6 +60,24 @@
 				<fileset dir="${project.dir}" />
 		</zip>
 		<!-- delete dir="${output.dir}/${version}/RestAPIReports_AllReports" / -->
+
+		<delete dir="${project.dir}/dist" />
+		<copy todir="${project.dir}/dist">
+	        	<fileset dir="${output.dir}/${version}/RestAPIReports_AllReports"/>
+				<fileset file="${project.dir}/plugin.nuspec"/>
+				<fileset file="${project.dir}/LICENCE"/>
+				<fileset file="${project.dir}/README.md"/>
+	    </copy>	
 		
+		<!--Nugget command to package the extension -->
+		<exec executable="cmd">
+		    <arg value="/c"/>
+		    <arg value="nugget_package.bat"/>
+			<arg value="${version}"/>
+		</exec>
+		<delete dir="${project.dir}/dist_nuget" />
+		<move file="${project.dir}/com.castsoftware.uc.restapi.excelreport.${version}.nupkg" todir="${project.dir}/dist_nuget" />
+
     </target>
+	
 </project>
