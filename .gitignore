@@ -1,5 +1,6 @@
-/bin/
 /build_Telefonica_reports.xml
 /CASTRestAPISampleCode.log
 /dist/
 /dist_nuget/
+/bin/
+/com.castsoftware.uc.restapi.excelreport.1.4.6.nupkg

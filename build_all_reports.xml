@@ -76,8 +76,7 @@
 			<arg value="${version}"/>
 		</exec>
 		<delete dir="${project.dir}/dist_nuget" />
-		<move file="${project.dir}/com.castsoftware.uc.restapi.excelreport.${version}.nupkg" todir="${project.dir}/dist_nuget" />
+		<move file="${project.dir}/com.castsoftware.uc.restapi.excelreports.${version}.nupkg" todir="${project.dir}/dist_nuget" />
 
     </target>
-	
 </project>
