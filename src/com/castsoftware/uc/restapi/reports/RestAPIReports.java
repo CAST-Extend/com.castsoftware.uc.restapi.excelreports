@@ -488,9 +488,6 @@ public class RestAPIReports {
 		try {
 			jsonObject = new JSONObject(responseBody);
 		} catch (Exception e) {
-			if ("A JSONArray text must start with '[' at character 1".equals(e.getMessage())) {
-				logger.error("Error " + responseBody.toString());
-			}
 			logger.error("Error " + e.getMessage());
 			jsonObject = new JSONObject();
 		}
