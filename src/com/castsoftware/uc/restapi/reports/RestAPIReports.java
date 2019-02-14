@@ -49,7 +49,7 @@ public class RestAPIReports {
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// Please also change the version in version.properties file
-	private static final String VERSION = "1.4.6";
+	private static final String VERSION = "1.4.7";
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2802,7 +2802,7 @@ public class RestAPIReports {
 		if (!FILTER_VERSIONS_ALL.equals(filterVersions) && !FILTER_VERSIONS_LASTONE.equals(filterVersions)
 				&& !FILTER_VERSIONS_LASTTWO.equals(filterVersions)) {
 			logger.fatal(
-					"Aborting ! Version filter paramater value do not have a correct value : VERSIONS_LASTONE / VERSIONS_LASTTWO / VERSION_ALL");
+					"Aborting ! Version filter paramater value do not have a correct value : VERSIONS_LASTONE / VERSIONS_LASTTWO / VERSIONS_ALL");
 			abort = true;
 		}
 

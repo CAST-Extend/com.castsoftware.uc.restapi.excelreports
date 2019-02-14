@@ -64,9 +64,11 @@
 		<delete dir="${project.dir}/dist" />
 		<copy todir="${project.dir}/dist">
 	        	<fileset dir="${output.dir}/${version}/RestAPIReports_AllReports"/>
-				<fileset file="${project.dir}/plugin.nuspec"/>
-				<fileset file="${project.dir}/LICENCE"/>
-				<fileset file="${project.dir}/README.md"/>
+        	    <fileset dir="${project.dir}" >
+        	    	<include name="plugin.nuspec" />
+        	    	<include name="LICENSE" />
+        	    	<include name="README.md" />
+        	    </fileset>	
 	    </copy>	
 		
 		<!--Nugget command to package the extension -->
