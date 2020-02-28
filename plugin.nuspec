@@ -7,7 +7,7 @@
     <authors>User Community</authors>
     <owners>CAST</owners>
     <projectUrl>https://github.com/CAST-Extend/com.castsoftware.uc.restapi.excelreports/wiki</projectUrl>
-    <iconUrl>https://github.com/CAST-Extend/com.castsoftware.uc.restapi.excelreports/blob/master/Excel_2010_23622.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/CAST-Extend/com.castsoftware.uc.restapi.excelreports/master/256px-Office-ms-excel.svg.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>This extension provides a set of Excel reports on quality rules and metrics extracted from the AIP Rest API</description>
     <releaseNotes>https://github.com/CAST-Extend/com.castsoftware.uc.restapi.excelreports/wiki#version-146-release-notes</releaseNotes>
