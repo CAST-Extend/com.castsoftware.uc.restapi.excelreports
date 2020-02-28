@@ -1,0 +1,112 @@
+Welcome to the com.castsoftware.uc.restapi.excelreports wiki!
+>Warning: The Extension described in this document is delivered as-is. This Extension is made available by CAST User Community and governed by Open Source License. Please consider all necessary steps to validate and to test the Extension in your environment before using it in production.        
+
+The extension is published under GNU LGPL v3 open source license
+
+# Table of content
+- [Introduction](#introduction)
+- [In what situation should you install this extension?](#situation)
+- [CAST AIP versions compatibility](#aipcompatibility)
+- [Supported DBMS servers](#supporteddbms)
+- [Configuration instructions](#configuration)
+- [Operation instructions](#Operation)
+   - [Source preparation and analysis configuration instructions](#preparation)
+   - [Analysis processing](#analysis)
+   - [Checks to be performed upon analysis](#checks)
+- [What results can you expect?](#expect)
+   - [List of custom objects](#objects)
+   - [List of links between custom objects](#links)
+   - [Sample graphical view in Enlighten](#graphical)
+   - [List of quality rules](#rules)
+- [Known issues](#KnownIssues)
+- [Limitations and potential enhancements](#limitations)
+- [Release Notes](#rn)
+
+<a name="introduction"></a>
+# Introduction 
+This extension provides a set of Excel reports on quality rules and metrics extracted from the AIP Rest API 
+
+<a name="situation"></a>
+# In what situation should you install this extension?
+When you want to generate Excel reports that are pulling out the below data from the Rest API, per snapshot and application : 
+- business criterias, 
+- Number of critical violations
+- Technical size (number of LOC, number of classes, number of decision points, number of methods, ...)
+- Functional size (AFP metrics, EFP metrics, AEP metrics)
+- Details of the quality rules grades, number of failed/total/successful checks, critical contribution, weight, technical criterion contribution ...
+- Added / Removed violations or critical violations per quality rule or technical cri
+- Number of action plan items per status
+
+There is also an option to extract the number of added/modified/deleted artifact from the application central schemas
+
+<a name="aipcompatibility"></a>
+# CAST AIP versions compatibility
+
+This extension is compatible with all AIP versions from 8.2 and 8.3. It's using eigter the health or engineering Rest sAPI
+ 
+It has been tested with:    
+- Health dashboard Rest API from 8.3.2 to 8.3.5
+- Engineering dashboard Rest API 8.2.5 and 8.3.6
+
+<a name="supporteddbms"></a>
+# Supported DBMS servers
+
+This extension is compatible with the following DBMS servers (hosting the Analysis Service):
+
+| CAST AIP release       | CSS2 | CSS3|
+| -----------------------|:----:|:------:|
+| All supported releases |   ![Supported](https://github.com/CAST-Extend/resourceALT/blob/master/check.png)  |    ![Supported](https://github.com/CAST-Extend/resourceALT/blob/master/check.png)   |
+
+<a name="configuration"></a>
+# Configuration instructions
+
+Once registered, you need to configure the batch file with your connection parameters to the REst API (and central schema).
+
+<a name="operation"></a>
+# Operation instructions
+Requires a Java runtime 8
+
+Open one of the 4 template .bat file provided
+If  you don't have JAVA_HOME env variable already defined, define the JAVA_HOME    
+- Configure below variables :    
+   * URL : Health or Engineering dashboard rest URL    
+   * AEDDOMAINS : list of engineering domains (central schemas), separated by a comma    
+   * USER : username    
+   * PASSWORD : user password    
+   * REPORTTYPE : do not change. 4 possible values Metrics_FullReport / Metrics_KPIReport / QR_FullReport / QR_SimpleReport    
+   * ENVIRONMENT : environment type (DEMO, DEV, PROD ...)    
+   * PROCESSAPPLICATION_FILTER : filter containing the list of application name to process. If empty, all applications will be processed    
+   * VERSION_FILTER : filter to process only the last snapshot, the last two or all snapshots. Default if empty : last snapshot    
+    
+- Run the batch file and open the Excel file generated in the same folder
+
+<a name="expect"></a>
+# What results can you expect?
+For the Metrics_KPIReport or Metrics_FullReport : 1 Excel file generated with all applications snapshots metrics    
+For the QR_SimpleReport or QR_FullReport : 1 Excel file generated with all applications quality rules (and distribution, measures, technical criterias)
+<a name="links"></a>
+## Links
+N/A
+<a name="rules"></a>
+## List of quality rules
+N/A
+
+<a name="knownIssues"></a>
+# Known issues
+- none
+
+<a name="limitations"></a>
+# Limitations and potential enhancements
+- none
+
+<a name="rn"></a>
+# Release Notes
+## Version 1.4.9
+* Add the extension id in the HTTP header X-Client
+## Version 1.4.8
+* Minor fixes on configuration parameters
+## Version 1.4.7
+* Minor change on license file
+## Version 1.4.6
+* Initial version published
+

@@ -27,7 +27,7 @@ For /F "tokens=1* delims==" %%A IN (version.properties) DO (
 ::Check JRE Installation
 IF NOT EXIST "%JAVA_HOME%\bin" GOTO JREPathNotSet
 
-SET CMD="%JAVA_HOME%\bin\java" -jar RestAPIReports-%VERSION%.jar -url %URL% -hDomain %AADDOMAIN% -user %USER% -password %PASSWORD% -environment %ENVIRONMENT% -reportType %REPORTTYPE% %PROCESSAPPLICATION_FILTER%
+SET CMD="%JAVA_HOME%\bin\java" -jar RestAPIReports-%VERSION%.jar -url %URL% -hDomain %AADDOMAIN% -user %USER% -password %PASSWORD% -environment %ENVIRONMENT% -reportType %REPORTTYPE% %PROCESSAPPLICATION_FILTER% %VERSION_FILTER%
 
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

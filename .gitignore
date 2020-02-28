@@ -1,5 +1,6 @@
-/bin/
 /build_Telefonica_reports.xml
 /CASTRestAPISampleCode.log
 /dist/
 /dist_nuget/
+/bin/
+/Export Data_*

@@ -49,7 +49,7 @@ public class RestAPIReports {
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// Please also change the version in version.properties file
-	private static final String VERSION = "1.4.6";
+	private static final String VERSION = "1.4.9";
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -488,9 +488,6 @@ public class RestAPIReports {
 		try {
 			jsonObject = new JSONObject(responseBody);
 		} catch (Exception e) {
-			if ("A JSONArray text must start with '[' at character 1".equals(e.getMessage())) {
-				logger.error("Error " + responseBody.toString());
-			}
 			logger.error("Error " + e.getMessage());
 			jsonObject = new JSONObject();
 		}
@@ -947,7 +944,7 @@ public class RestAPIReports {
 		return null;
 	}
 
-	private boolean isQualityRuleDataValidInRestAPI(JSONObject parentContainer, String key) throws JSONException {
+	private boolean isDataValidInRestAPI(JSONObject parentContainer, String key) throws JSONException {
 		return parentContainer.has(key) && parentContainer.getString(key) != null
 				&& !"null".equals(parentContainer.getString(key));
 	}
@@ -1133,7 +1130,7 @@ public class RestAPIReports {
 
 						// JSON result block
 						if (jsonObjectResult.has("result") && jsonObjectResult.get("result") != null) {
-							if (isQualityRuleDataValidInRestAPI(jsonObjectResult.getJSONObject("result"), "grade")) {
+							if (isDataValidInRestAPI(jsonObjectResult.getJSONObject("result"), "grade")) {
 								Double grade = jsonObjectResult.getJSONObject("result").getDouble("grade");
 								qr.setGrade(grade);
 							}
@@ -1144,19 +1141,19 @@ public class RestAPIReports {
 								if (jsonObjectResult.getJSONObject("result").has("violationRatio")) {
 									JSONObject vratio = jsonObjectResult.getJSONObject("result")
 											.getJSONObject("violationRatio");
-									if (isQualityRuleDataValidInRestAPI(vratio, "totalChecks")) {
+									if (isDataValidInRestAPI(vratio, "totalChecks")) {
 										Integer totalChecks = vratio.getInt("totalChecks");
 										qr.setTotalChecks(totalChecks);
 									}
-									if (isQualityRuleDataValidInRestAPI(vratio, "failedChecks")) {
+									if (isDataValidInRestAPI(vratio, "failedChecks")) {
 										Integer failedChecks = vratio.getInt("failedChecks");
 										qr.setFailedChecks(failedChecks);
 									}
-									if (isQualityRuleDataValidInRestAPI(vratio, "successfulChecks")) {
+									if (isDataValidInRestAPI(vratio, "successfulChecks")) {
 										Integer sucessfullChecks = vratio.getInt("successfulChecks");
 										qr.setSuccessfulChecks(sucessfullChecks);
 									}
-									if (isQualityRuleDataValidInRestAPI(vratio, "ratio")) {
+									if (isDataValidInRestAPI(vratio, "ratio")) {
 										Double complianceRatio = vratio.getDouble("ratio");
 										qr.setComplianceRatio(complianceRatio);
 									}
@@ -1176,19 +1173,19 @@ public class RestAPIReports {
 								if (jsonObjectResult.getJSONObject("result").has("evolutionSummary")) {
 									JSONObject vevolsum = jsonObjectResult.getJSONObject("result")
 											.getJSONObject("evolutionSummary");
-									if (isQualityRuleDataValidInRestAPI(vevolsum, "addedViolations")) {
+									if (isDataValidInRestAPI(vevolsum, "addedViolations")) {
 										addedViolations = vevolsum.getInt("addedViolations");
 										qr.setAddedViolations(addedViolations);
 									}
-									if (isQualityRuleDataValidInRestAPI(vevolsum, "removedViolations")) {
+									if (isDataValidInRestAPI(vevolsum, "removedViolations")) {
 										removedViolations = vevolsum.getInt("removedViolations");
 										qr.setRemovedViolations(removedViolations);
 									}
-									if (isQualityRuleDataValidInRestAPI(vevolsum, "addedCriticalViolations")) {
+									if (isDataValidInRestAPI(vevolsum, "addedCriticalViolations")) {
 										addedCriticalViolations = vevolsum.getInt("addedCriticalViolations");
 										qr.setAddedCriticalViolations(addedCriticalViolations);
 									}
-									if (isQualityRuleDataValidInRestAPI(vevolsum, "removedCriticalViolations")) {
+									if (isDataValidInRestAPI(vevolsum, "removedCriticalViolations")) {
 										removedCriticalViolations = vevolsum
 												.getInt("removedCriticalViolations");
 										qr.setRemovedCriticalViolations(removedCriticalViolations);
@@ -1206,12 +1203,12 @@ public class RestAPIReports {
 								if (jsonObjectResult.getJSONObject("result").has("evolutionSummary")) {
 									JSONObject vevolsum = jsonObjectResult.getJSONObject("result")
 											.getJSONObject("evolutionSummary");
-									if (isQualityRuleDataValidInRestAPI(vevolsum, "totalCriticalViolations")) {
+									if (isDataValidInRestAPI(vevolsum, "totalCriticalViolations")) {
 										Integer totalCriticalViolations = vevolsum
 												.getInt("totalCriticalViolations");
 										qr.setTotalCriticalViolations(totalCriticalViolations);
 									}
-									if (isQualityRuleDataValidInRestAPI(vevolsum, "totalViolations")) {
+									if (isDataValidInRestAPI(vevolsum, "totalViolations")) {
 										Integer totalViolations = vevolsum.getInt("totalViolations");
 										qr.setTotalViolations(totalViolations);
 									}
@@ -1412,7 +1409,7 @@ public class RestAPIReports {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Retrieve the Business criteria Metrics
+	 * Retrieve the Technical size Metrics
 	 * 
 	 * @throws Exception
 	 */
@@ -1437,7 +1434,7 @@ public class RestAPIReports {
 					for (int j = 0; j < appResultsArray.length(); j++) {
 						JSONObject jsonObjectResult = appResultsArray.getJSONObject(j);
 						/*
-						 * LOCs = "60017";
+						 * LOCs = "10151";
 						 */
 						String strkey = jsonObjectResult.getJSONObject("reference").getString("key");
 						Integer value = jsonObjectResult.getJSONObject("result").getInt("value");
@@ -1610,6 +1607,8 @@ public class RestAPIReports {
 						 */
 						// Total AEP
 						String strkey = jsonObjectResult.getJSONObject("reference").getString("key");
+						if (!isDataValidInRestAPI(jsonObjectResult.getJSONObject("result"), "value"))
+							continue;
 						double valueDouble = jsonObjectResult.getJSONObject("result").getDouble("value");
 						int valueInt = jsonObjectResult.getJSONObject("result").getInt("value");
 
@@ -1834,9 +1833,8 @@ public class RestAPIReports {
 					retrieveDBCentralSchemaMetrics();
 
 				// compute CV / AFP and CV AM / AEP
-				// Specific to Telefonica
+				// Specific for Telefonica
 				for (MetricReportOutput output : listMetricsReportOutputs) {
-
 					if (output.getNbAEPTotal() > 0.0) {
 						double d1 = (new Double(output.getCritViolationsInNewAndModifiedCode())
 								/ new Double(output.getNbAEPTotal()));
@@ -1848,8 +1846,10 @@ public class RestAPIReports {
 						output.setCVPerAFP(d2);
 					}
 				}
+
 			}
 			reportMetricsOutputstoLog();
+			
 		}
 
 		// Generation the excel file(s)
@@ -2608,6 +2608,8 @@ public class RestAPIReports {
 			HttpGet httpget = new HttpGet(URI);
 			// JSON
 			httpget.addHeader("accept", "application/json");
+			// Set the name of the client
+			httpget.addHeader("X-Client", "com.castsoftware.uc.restapi.excelreports");
 			// authentication parameters
 			String encoding = DatatypeConverter.printBase64Binary((user + ":" + pwd).getBytes(encodingToUse));
 			httpget.setHeader("Authorization", "Basic " + encoding);
@@ -2805,7 +2807,7 @@ public class RestAPIReports {
 		if (!FILTER_VERSIONS_ALL.equals(filterVersions) && !FILTER_VERSIONS_LASTONE.equals(filterVersions)
 				&& !FILTER_VERSIONS_LASTTWO.equals(filterVersions)) {
 			logger.fatal(
-					"Aborting ! Version filter paramater value do not have a correct value : VERSIONS_LASTONE / VERSIONS_LASTTWO / VERSION_ALL");
+					"Aborting ! Version filter paramater value do not have a correct value : VERSIONS_LASTONE / VERSIONS_LASTTWO / VERSIONS_ALL");
 			abort = true;
 		}
 
